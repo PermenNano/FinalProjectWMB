@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1003667014854",
+    "project_id": "sewmp-project",
+    "storage_bucket": "sewmp-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003667014854:android:61a5c2bdccdca1607cc3c7",
+        "android_client_info": {
+          "package_name": "com.example.finalprojectwmb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1DJeF_rb5qbXCHQXjK3qP7YGJkGCRhqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
