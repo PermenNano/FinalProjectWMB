@@ -1,27 +1,24 @@
-package com.example.finalprojectwmb;
-
-
+package com.example.finalprojectwmb.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalprojectwmb.Adapter.CardAdapter;
+import com.example.finalprojectwmb.Destination;
+import com.example.finalprojectwmb.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.example.finalprojectwmb.R;
 
+// SearchActivity.java
 public class SearchActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
     private List<Destination> destinationList;
@@ -32,18 +29,17 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        db = FirebaseFirestore.getInstance();
-
-        // Initialize List and Adapter
+        // Initialize RecyclerView and Adapter
         recyclerView = findViewById(R.id.recyclerView);
         destinationList = new ArrayList<>();
-        cardAdapter = new CardAdapter(this, destinationList);
+        cardAdapter = new CardAdapter(this, destinationList, this::onDestinationClick);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(cardAdapter);
 
-        loadDestinationsFromFirestore();
+        // Load destinations from local data
+        loadLocalDestinations();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home);
@@ -66,35 +62,26 @@ public class SearchActivity extends AppCompatActivity {
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                overridePendingTransition(0, 0);
+                overridePendingTransition( 0, 0);
                 return true;
             }
             return false;
         });
     }
 
-    private void loadDestinationsFromFirestore() {
-        db.collection("destinations")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String id = document.getId();
-                            String name = document.getString("name");
-                            String price = document.getString("price");
-                            String imageUrl = document.getString("imageUrl");
+    private void loadLocalDestinations() {
+        // Hardcoded destinations list (using drawable resources)
+        destinationList.add(new Destination("1", "West Borneo", R.drawable.westborneo));
+        destinationList.add(new Destination("2", "South Borneo", R.drawable.southborneo));
+        destinationList.add(new Destination("3", "North Borneo", R.drawable.northborneo));
 
-                            // Log data to confirm retrieval
-                            Log.d("FirestoreData", "Fetched Destination: " + name + ", Price: " + price + ", ImageURL: " + imageUrl);
+        // Notify adapter about the new data
+        cardAdapter.notifyDataSetChanged();
+    }
 
-                            destinationList.add(new Destination(id, name, price, imageUrl));
-                        }
-
-                        cardAdapter.notifyDataSetChanged();
-                        Log.d("FirestoreData", "Data successfully loaded into adapter.");
-                    } else {
-                        Log.w("SearchActivity", "Error getting documents.", task.getException());
-                    }
-                });
+    private void onDestinationClick(Destination destination) {
+        Intent intent = new Intent(this, DestinationDetailActivity.class);
+        intent.putExtra("destinationId", destination.getId());
+        startActivity(intent);
     }
 }

@@ -1,30 +1,23 @@
-package com.example.finalprojectwmb;
+package com.example.finalprojectwmb.Activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 import com.example.finalprojectwmb.R;
-public class ProfileActivity extends AppCompatActivity {
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile); // Change this to the layout of each respective activity
+        setContentView(R.layout.activity_history); // Change this to the layout of each respective activity
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.profile);
+        bottomNavigationView.setSelectedItemId(R.id.history);
+
 
         // Set up navigation item selection listener
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -32,13 +25,13 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (item.getItemId() == R.id.home) {
                 // Navigate to SearchActivity (as Home)
-                intent = new Intent(ProfileActivity.this, SearchActivity.class);
+                intent = new Intent(HistoryActivity.this, SearchActivity.class);
             } else if (item.getItemId() == R.id.history) {
-                intent = new Intent(ProfileActivity.this, HistoryActivity.class);
+                intent = new Intent(HistoryActivity.this, HistoryActivity.class);
             } else if (item.getItemId() == R.id.settings) {
-                intent = new Intent(ProfileActivity.this, SettingActivity.class);
+                intent = new Intent(HistoryActivity.this, SettingActivity.class);
             } else if (item.getItemId() == R.id.profile) {
-                intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                intent = new Intent(HistoryActivity.this, ProfileActivity.class);
             }
 
             if (intent != null) {
@@ -48,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             }
             return false;
-
         });
     }
-}
+    }

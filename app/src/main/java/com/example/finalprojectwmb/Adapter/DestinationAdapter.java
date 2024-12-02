@@ -1,4 +1,5 @@
-package com.example.finalprojectwmb;
+package com.example.finalprojectwmb.Adapter;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.example.finalprojectwmb.Destination;
+
+import com.example.finalprojectwmb.R;
 
 import java.util.List;
 
@@ -31,12 +34,11 @@ public class DestinationAdapter extends ArrayAdapter<Destination> {
         Destination destination = destinations.get(position);
 
         TextView nameTextView = convertView.findViewById(R.id.card_title);
-        TextView priceTextView = convertView.findViewById(R.id.card_price);
         ImageView imageView = convertView.findViewById(R.id.card_image);
 
+        // Set text and drawable resource
         nameTextView.setText(destination.getName());
-        priceTextView.setText(destination.getPrice());
-        Picasso.get().load(destination.getImageUrl()).into(imageView);
+        imageView.setImageResource(destination.getImageResId()); // Load image from drawable
 
         return convertView;
     }
