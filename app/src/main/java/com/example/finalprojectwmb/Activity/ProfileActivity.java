@@ -1,9 +1,16 @@
 package com.example.finalprojectwmb.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +30,7 @@ import java.util.Date;
 public class ProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 1; // Request code for picking an image
     private static final int CAPTURE_IMAGE = 2; // Request code for capturing an image
+    private static final int REQUEST_CAMERA_PERMISSION = 3; // Request code for camera permission
     private EditText usernameDisplay, emailDisplay, passwordDisplay; // Removed aboutMeDisplay
     private ImageView profileImage; // ImageView to display the profile image
     private Button changeProfilePicture, saveButton; // Buttons for changing and saving
@@ -75,22 +83,13 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Choose Profile Picture")
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
-                        // Open camera
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                            // Create a file to save the image
-                            File photoFile = null;
-                            try {
-                                photoFile = createImageFile();
-                            } catch (IOException ex) {
-                                // Handle error
-                                Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT).show();
-                            }
-                            if (photoFile != null) {
-                                imageUri = Uri.fromFile(photoFile);
-                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                startActivityForResult(cameraIntent, CAPTURE_IMAGE);
-                            }
+                        // Check for camera permission
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            // Request camera permission
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                        } else {
+                            // Open camera
+                            openCamera();
                         }
                     } else {
                         // Open gallery
@@ -101,16 +100,40 @@ public class ProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create a file to save the image
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Handle error
+                Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT).show();
+            }
+            if (photoFile != null) {
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(cameraIntent, CAPTURE_IMAGE);
+            }
+        }
+    }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(null);
-        return File.createTempFile(
+        File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        imageUri = FileProvider.getUriForFile(this,
+                getApplicationContext().getPackageName() + ".fileprovider",
+                image);
+        return image;
     }
 
     @Override
@@ -143,5 +166,19 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Example: Show a toast message (replace with actual save logic)
         Toast.makeText(this, "Profile saved:\nUsername: " + username + "\nEmail: " + email, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, open camera
+                openCamera();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Camera permission is required to take pictures", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

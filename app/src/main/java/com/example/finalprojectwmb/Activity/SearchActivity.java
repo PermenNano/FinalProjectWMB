@@ -68,6 +68,12 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    private void onDestinationClick(Destination destination) {
+        Intent intent = new Intent(this, DestinationDetailActivity.class);
+        intent.putExtra("destinationId", destination.getId()); // Pass the destination ID
+        startActivity(intent);
+    }
+
     private void loadLocalDestinations() {
         // Hardcoded destinations list (using drawable resources)
         destinationList.add(new Destination("1", "West Borneo", R.drawable.westborneo));
@@ -76,11 +82,5 @@ public class SearchActivity extends AppCompatActivity {
 
         // Notify adapter about the new data
         cardAdapter.notifyDataSetChanged();
-    }
-
-    private void onDestinationClick(Destination destination) {
-        Intent intent = new Intent(this, DestinationDetailActivity.class);
-        intent.putExtra("destinationId", destination.getId());
-        startActivity(intent);
     }
 }
