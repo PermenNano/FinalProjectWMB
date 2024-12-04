@@ -59,7 +59,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         }
 
         public void bind(final Destination destination, final OnItemClickListener listener) {
-            imageView.setImageResource(destination.getImageResId());
+            imageView.setImageResource(destination.getImageResource());
             textView.setText(destination.getName());
             itemView.setOnClickListener(v -> listener.onItemClick(destination));
         }

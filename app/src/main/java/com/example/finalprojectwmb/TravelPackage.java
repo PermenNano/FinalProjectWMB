@@ -1,20 +1,20 @@
 package com.example.finalprojectwmb;
 
 public class TravelPackage {
-    private String name;
+    private String title;
     private String price;
     private String details;
-    private int imageResource; // Add this line for the image resource
+    private int imageResource;
 
-    public TravelPackage(String name, String price, String details, int imageResource) {
-        this.name = name;
+    public TravelPackage(String title, String price, String details, int imageResource) {
+        this.title = title;
         this.price = price;
         this.details = details;
-        this.imageResource = imageResource; // Initialize the image resource
+        this.imageResource = imageResource;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getPrice() {
@@ -25,7 +25,7 @@ public class TravelPackage {
         return details;
     }
 
-    public int getImageResource() { // Add this getter method
+    public int getImageResource() {
         return imageResource;
     }
 }
