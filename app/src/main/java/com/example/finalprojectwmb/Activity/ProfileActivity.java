@@ -9,17 +9,24 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText; // Change TextView to EditText
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.finalprojectwmb.R;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 1; // Request code for picking an image
-    private EditText usernameDisplay, emailDisplay, passwordDisplay, aboutMeDisplay; // Change to EditText
+    private static final int CAPTURE_IMAGE = 2; // Request code for capturing an image
+    private EditText usernameDisplay, emailDisplay, passwordDisplay; // Removed aboutMeDisplay
     private ImageView profileImage; // ImageView to display the profile image
     private Button changeProfilePicture, saveButton; // Buttons for changing and saving
+    private Uri imageUri; // URI for the captured image
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +37,26 @@ public class ProfileActivity extends AppCompatActivity {
         usernameDisplay = findViewById(R.id.usernameEdit); // Update to match EditText ID
         emailDisplay = findViewById(R.id.emailEdit); // Update to match EditText ID
         passwordDisplay = findViewById(R.id.passwordEdit); // Update to match EditText ID
-        aboutMeDisplay = findViewById(R.id.aboutMeEdit); // Update to match EditText ID
         profileImage = findViewById(R.id.profileImage);
         changeProfilePicture = findViewById(R.id.changeProfilePicture);
         saveButton = findViewById(R.id.saveButton);
+
         // Retrieve user data from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "Guest"); // Default to "Guest" if not found
+        String username = sharedPreferences.getString("username", ""); // Default to empty if not found
         String email = sharedPreferences.getString("email", ""); // Default to empty if not found
-        String password = sharedPreferences.getString("password", ""); // Default to empty if not found
-        String aboutMe = sharedPreferences.getString("aboutMe", "");
-
+        String password = sharedPreferences.getString("password", ""); // You might want to handle this differently
 
         // Set the data to the EditTexts
         usernameDisplay.setText(username);
-        emailDisplay.setText(email);
+        emailDisplay.setText(email); // Set the email to the EditText
         passwordDisplay.setText(password);
-        aboutMeDisplay.setText(aboutMe);
 
         // Set up button listeners
         changeProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery();
+                showImageOptions();
             }
         });
 
@@ -64,17 +68,60 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE);
+    private void showImageOptions() {
+        // Show options to choose between camera and gallery
+        String[] options = {"Camera", "Gallery"};
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Choose Profile Picture")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        // Open camera
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                            // Create a file to save the image
+                            File photoFile = null;
+                            try {
+                                photoFile = createImageFile();
+                            } catch (IOException ex) {
+                                // Handle error
+                                Toast.makeText(this, "Error creating file", Toast.LENGTH_SHORT).show();
+                            }
+                            if (photoFile != null) {
+                                imageUri = Uri.fromFile(photoFile);
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                startActivityForResult(cameraIntent, CAPTURE_IMAGE);
+                            }
+                        }
+                    } else {
+                        // Open gallery
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, PICK_IMAGE);
+                    }
+                })
+                .show();
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(null);
+        return File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            profileImage.setImageURI(imageUri); // Set the selected image to the ImageView
+            Uri selectedImageUri = data.getData();
+            profileImage.setImageURI(selectedImageUri); // Set the selected image to the ImageView
+        } else if (requestCode == CAPTURE_IMAGE && resultCode == RESULT_OK) {
+            // Set the captured image to the ImageView
+            profileImage.setImageURI(imageUri);
         } else {
             Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
         }
@@ -85,7 +132,6 @@ public class ProfileActivity extends AppCompatActivity {
         String username = usernameDisplay.getText().toString();
         String email = emailDisplay.getText().toString();
         String password = passwordDisplay.getText().toString();
-        String aboutMe = aboutMeDisplay.getText().toString();
 
         // Save to SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -93,7 +139,6 @@ public class ProfileActivity extends AppCompatActivity {
         editor.putString("username", username);
         editor.putString("email", email);
         editor.putString("password", password); // Be cautious with storing passwords
-        editor.putString("aboutMe", aboutMe);
         editor.apply();
 
         // Example: Show a toast message (replace with actual save logic)

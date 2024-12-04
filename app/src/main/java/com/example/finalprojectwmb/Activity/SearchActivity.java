@@ -16,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-// SearchActivity.java
 public class SearchActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -62,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
             if (intent != null) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                overridePendingTransition( 0, 0);
+                overridePendingTransition(0, 0);
                 return true;
             }
             return false;

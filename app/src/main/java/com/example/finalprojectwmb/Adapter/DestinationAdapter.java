@@ -38,7 +38,7 @@ public class DestinationAdapter extends ArrayAdapter<Destination> {
 
         // Set text and drawable resource
         nameTextView.setText(destination.getName());
-        imageView.setImageResource(destination.getImageResId()); // Load image from drawable
+        imageView.setImageResource(destination.getImageResource()); // Load image from drawable
 
         return convertView;
     }

@@ -3,23 +3,18 @@ package com.example.finalprojectwmb.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.finalprojectwmb.R;
-import com.example.finalprojectwmb.TravelPackage; // Ensure you import the correct class
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.finalprojectwmb.R;
+import com.example.finalprojectwmb.TravelPackage;
 import java.util.List;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageViewHolder> {
+    private List<TravelPackage> packageList;
 
-    private List<TravelPackage> packageList; // Corrected variable name
-
-    public PackageAdapter(List<TravelPackage> packageList) { // Updated constructor parameter type
+    public PackageAdapter(List<TravelPackage> packageList) {
         this.packageList = packageList;
     }
 
@@ -32,13 +27,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
 
     @Override
     public void onBindViewHolder(@NonNull PackageViewHolder holder, int position) {
-        TravelPackage pkg = packageList.get(position);
-        holder.packageName.setText(pkg.getName());
-        holder.packagePrice.setText(pkg.getPrice());
-        holder.packageDetails.setText(pkg.getDetails());
-        holder.imageView.setImageResource(pkg.getImageResource()); // Set the image resource
+        TravelPackage travelPackage = packageList.get(position);
+        holder.titleTextView.setText(travelPackage.getTitle());
+        holder.priceTextView.setText(travelPackage.getPrice());
+        holder.descriptionTextView.setText(travelPackage.getDetails()); // Ensure this matches your TravelPackage class
+        holder.imageView.setImageResource(travelPackage.getImageResource());
     }
-
 
     @Override
     public int getItemCount() {
@@ -46,17 +40,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
     }
 
     public static class PackageViewHolder extends RecyclerView.ViewHolder {
-        TextView packageName, packagePrice, packageDetails;
-        Button applyButton;
+        TextView titleTextView;
+        TextView priceTextView;
+        TextView descriptionTextView;
         ImageView imageView;
 
         public PackageViewHolder(@NonNull View itemView) {
             super(itemView);
-            packageName = itemView.findViewById(R.id.packageName);
-            packagePrice = itemView.findViewById(R.id.packagePrice);
-            packageDetails = itemView.findViewById(R.id.packageDetails);
-            applyButton = itemView.findViewById(R.id.applyButton);
-            imageView = itemView.findViewById(R.id.imageView);
+            titleTextView = itemView.findViewById(R.id.packageTitle); // Ensure this ID matches your layout
+            priceTextView = itemView.findViewById(R.id.packagePrice); // Ensure this ID matches your layout
+            descriptionTextView = itemView.findViewById(R.id.packageDetails); // Updated to match your layout
+            imageView = itemView.findViewById(R.id.packageImage); // Ensure this ID matches your layout
         }
     }
 }

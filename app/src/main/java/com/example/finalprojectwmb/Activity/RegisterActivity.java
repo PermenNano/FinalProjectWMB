@@ -16,7 +16,7 @@ import com.example.finalprojectwmb.R;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button register;
-    private EditText userName, passWord, aboutMe, emailField;
+    private EditText userName, passWord, emailField; // Removed aboutMe
     private DatabaseHelper db;
 
     @Override
@@ -25,9 +25,9 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         userName = findViewById(R.id.username);
-        emailField = findViewById(R.id.email); // Make sure to initialize the email field
+        emailField = findViewById(R.id.email); // Initialize the email field
         passWord = findViewById(R.id.password);
-        aboutMe = findViewById(R.id.aboutMe);
+
         register = findViewById(R.id.register);
 
         db = new DatabaseHelper(this);
@@ -39,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = emailField.getText().toString().trim();
                 String password = passWord.getText().toString().trim();
                 String username = userName.getText().toString().trim();
-                String aboutMeText = aboutMe.getText().toString().trim();
 
                 // Check for empty fields
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
@@ -51,13 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(password) || password.length() < 6) {
+                if (password.length() < 6) {
                     Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 // Insert user into SQLite database
-                if (db.insertUser(email, password, username, aboutMeText)) {
+                if (db.insertUser(email, password, username)) { // Removed aboutMeText
                     Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -69,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-        // Helper method to validate email format
+    // Helper method to validate email format
     private boolean isValidEmail(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }

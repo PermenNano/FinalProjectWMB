@@ -13,7 +13,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_EMAIL = "email";
     private static final String COL_PASSWORD = "password";
     private static final String COL_USERNAME = "username";
-    private static final String COL_ABOUT_ME = "about_me";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -24,8 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
                 COL_EMAIL + " TEXT PRIMARY KEY, " +
                 COL_PASSWORD + " TEXT, " +
-                COL_USERNAME + " TEXT, " +
-                COL_ABOUT_ME + " TEXT)";
+                COL_USERNAME + " TEXT)";
         db.execSQL(createTable);
     }
 
@@ -35,13 +33,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertUser(String email, String password, String username, String aboutMe) {
+    public boolean insertUser(String email, String password, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_EMAIL, email);
         contentValues.put(COL_PASSWORD, password);
         contentValues.put(COL_USERNAME, username);
-        contentValues.put(COL_ABOUT_ME, aboutMe);
 
         try {
             long result = db.insert(TABLE_NAME, null, contentValues);

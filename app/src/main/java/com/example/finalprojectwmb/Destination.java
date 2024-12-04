@@ -3,15 +3,24 @@ package com.example.finalprojectwmb;
 public class Destination {
     private String id;
     private String name;
-    private int imageResId;
+    private int imageResource;
 
-    public Destination(String id, String name, int imageResId) {
+    public Destination(String id, String name, int imageResource) {
         this.id = id;
         this.name = name;
-        this.imageResId = imageResId;
+        this.imageResource = imageResource;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public int getImageResId() { return imageResId; }
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getImageResource() {
+        return imageResource;
+    }
 }
+
