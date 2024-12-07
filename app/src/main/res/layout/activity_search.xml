@@ -5,164 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFf"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Header with About, Contact, and Logo -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:gravity="center_vertical">
-
-                <!-- Logo Text -->
-                <TextView
-                    android:id="@+id/logoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="KalimantanExplore"
-                    android:textColor="#0066CC"
-                    android:textSize="12sp" />
-
-                <!-- Search Bar (EditText) -->
-                <EditText
-                    android:id="@+id/searchEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:drawableStart="@drawable/ic_search"
-                    android:drawablePadding="8dp"
-                    android:hint="Search"
-                    android:padding="10dp"
-                    android:layout_toEndOf="@id/logoText"
-                    android:layout_weight="1"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#999999" />
-            </RelativeLayout>
-
-
-            <!-- Image Banner -->
-            <ImageView
-                android:id="@+id/bannerImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="16dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/banner" /> <!-- Replace with your banner image -->
-
-            <!-- Trusted Partners Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Trusted by:"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:fontFamily="sans-serif" />
-
-                <ImageView
-                    android:id="@+id/partnerLogo1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/traveloka" /> <!-- Replace with partner logo -->
-
-                <ImageView
-                    android:id="@+id/partnerLogo2"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/garuda_indonesia" /> <!-- Replace with partner logo -->
-
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/partnerLogo3"-->
-                <!--                    android:layout_width="40dp"-->
-                <!--                    android:layout_height="40dp"-->
-                <!--                    android:layout_marginStart="8dp"-->
-                <!--                    android:src="@drawable/" /> &lt;!&ndash; Replace with partner logo &ndash;&gt;-->
-            </LinearLayout>
-
-            <!-- RecyclerView for Places -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButton4"
-                    android:layout_width="0dp"
-                    android:layout_height="134dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/banner"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerCrop" />
-
-                <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="0dp"
-                    android:layout_height="134dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/banner" />
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="0dp"
-                    android:layout_height="134dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/banner" />
-
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="141dp"
-                app:srcCompat="@drawable/traveloka" />
-
-
-        </LinearLayout>
-
-    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
@@ -170,4 +16,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Fragment container -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize" /> <!-- Adjust margin if needed -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

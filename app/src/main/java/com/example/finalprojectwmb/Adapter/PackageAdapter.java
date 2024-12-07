@@ -1,20 +1,26 @@
 package com.example.finalprojectwmb.Adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalprojectwmb.R;
 import com.example.finalprojectwmb.TravelPackage;
+import com.example.finalprojectwmb.Activity.FormActivity; // Import your FormActivity
 import java.util.List;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageViewHolder> {
     private List<TravelPackage> packageList;
+    private Context context; // Add context
 
-    public PackageAdapter(List<TravelPackage> packageList) {
+    public PackageAdapter(Context context, List<TravelPackage> packageList) {
+        this.context = context; // Initialize context
         this.packageList = packageList;
     }
 
@@ -30,8 +36,14 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
         TravelPackage travelPackage = packageList.get(position);
         holder.titleTextView.setText(travelPackage.getTitle());
         holder.priceTextView.setText(travelPackage.getPrice());
-        holder.descriptionTextView.setText(travelPackage.getDetails()); // Ensure this matches your TravelPackage class
+        holder.descriptionTextView.setText(travelPackage.getDetails());
         holder.imageView.setImageResource(travelPackage.getImageResource());
+
+        // Set up the apply button click listener
+        holder.applyButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, FormActivity.class);
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -44,13 +56,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
         TextView priceTextView;
         TextView descriptionTextView;
         ImageView imageView;
+        Button applyButton; // Add apply button
 
         public PackageViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.packageTitle); // Ensure this ID matches your layout
-            priceTextView = itemView.findViewById(R.id.packagePrice); // Ensure this ID matches your layout
-            descriptionTextView = itemView.findViewById(R.id.packageDetails); // Updated to match your layout
-            imageView = itemView.findViewById(R.id.packageImage); // Ensure this ID matches your layout
+            titleTextView = itemView.findViewById(R.id.packageTitle);
+            priceTextView = itemView.findViewById(R.id.packagePrice);
+            descriptionTextView = itemView.findViewById(R.id.packageDetails);
+            imageView = itemView.findViewById(R.id.packageImage);
+            applyButton = itemView.findViewById(R.id.applyButton); // Initialize apply button
         }
     }
 }

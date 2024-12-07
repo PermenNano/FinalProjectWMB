@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
-        android:contentDescription="Destination Image" />
+        android:contentDescription="Destination Image"
+        android:background="@drawable/rounded_image_background"
+        android:clipToOutline="true"/>
 
     <TextView
         android:id="@+id/card_title"
@@ -20,7 +22,8 @@
         android:text="Destination Name"
         android:textSize="18sp"
         android:layout_marginTop="8dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:clipToOutline="true"/>
 
 
 </LinearLayout>
