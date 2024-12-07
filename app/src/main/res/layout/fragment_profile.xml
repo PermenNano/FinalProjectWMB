@@ -70,27 +70,12 @@
                     android:id="@+id/changeProfilePicture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Change Profile Picture"
+                    android:text="Change The Profile"
                     android:layout_gravity="center"
                     android:backgroundTint="#0080FF"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="1dp" />
 
                 <!-- Editable User Information -->
-                <TextView
-                    android:id="@+id/usernameLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Username :"
-                    android:layout_marginTop="16dp" />
-
-                <EditText
-                    android:id="@+id/usernameEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:padding="12dp"
-                    android:textColor="#000000" />
 
                 <TextView
                     android:id="@+id/emailLabel"
@@ -108,6 +93,21 @@
                     android:padding="12dp"
                     android:textColor="#000000"
                     android:inputType="textEmailAddress" />
+                <TextView
+                    android:id="@+id/usernameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username :"
+                    android:layout_marginTop="16dp" />
+
+                <EditText
+                    android:id="@+id/usernameEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:padding="12dp"
+                    android:textColor="#000000" />
 
                 <TextView
                     android:id="@+id/passwordLabel"
