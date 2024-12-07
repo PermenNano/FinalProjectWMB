@@ -11,13 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.finalprojectwmb.Database.DatabaseHelper;
 import com.example.finalprojectwmb.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button register;
-    private EditText userName, passWord, emailField; // Removed aboutMe
-    private DatabaseHelper db;
+    private EditText userName, passWord, emailField;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,47 +31,72 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         userName = findViewById(R.id.username);
-        emailField = findViewById(R.id.email); // Initialize the email field
+        emailField = findViewById(R.id.email);
         passWord = findViewById(R.id.password);
-
         register = findViewById(R.id.register);
 
-        db = new DatabaseHelper(this);
+        // Initialize Firebase Auth and Firestore
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // Register button listener
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailField.getText().toString().trim();
-                String password = passWord.getText().toString().trim();
-                String username = userName.getText().toString().trim();
+        register.setOnClickListener(v -> registerUser());
+    }
 
-                // Check for empty fields
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
-                    Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private void registerUser() {
+        String email = emailField.getText().toString().trim();
+        String password = passWord.getText().toString().trim();
+        String username = userName.getText().toString().trim();
 
-                if (!isValidEmail(email)) {
-                    Toast.makeText(RegisterActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (password.length() < 6) {
-                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        // Check for empty fields
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
+            Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                // Insert user into SQLite database
-                if (db.insertUser(email, password, username)) { // Removed aboutMeText
-                    Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+        if (!isValidEmail(email)) {
+            Toast.makeText(RegisterActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (password.length() < 6) {
+            Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create user with Firebase Auth
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, task -> {
+                    if (task.isSuccessful()) {
+                        // Registration successful
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            createUserDocument(user, username);
+                        }
+                    } else {
+                        // Registration failed
+                        Toast.makeText(RegisterActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void createUserDocument(FirebaseUser user, String username) {
+        String userId = user.getUid(); // Get the user's UID
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", user.getEmail()); // Set the user's email
+        userData.put("username", username); // Set the username provided during registration
+        userData.put("profileImage", ""); // Initialize with an empty string or a default image URL
+
+        db.collection("users").document(userId)
+                .set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(RegisterActivity.this, "User document created successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(RegisterActivity.this, "Error creating user document: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     // Helper method to validate email format

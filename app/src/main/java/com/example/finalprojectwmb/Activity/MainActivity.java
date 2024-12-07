@@ -14,13 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.finalprojectwmb.Database.DatabaseHelper;
 import com.example.finalprojectwmb.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private Button login;
     private EditText userName, passWord;
-    private DatabaseHelper db;
+    private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         TextView registerLink = findViewById(R.id.register);
 
-        db = new DatabaseHelper(this);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
         // Load saved email if it exists
@@ -65,22 +67,27 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Check user credentials in SQLite database
-                if (db.checkUser(email, password)) {
-                    Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                // Sign in with Firebase Auth
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(MainActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                // Login successful
+                                Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                    // Save email to SharedPreferences
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("email", email);
-                    editor.apply();
+                                // Save email to SharedPreferences
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("email", email);
+                                editor.apply();
 
-                    // Start SearchActivity on successful login
-                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                    finish();  // Optional: Close MainActivity so user can't go back to login screen
-                } else {
-                    Toast.makeText(MainActivity.this, "Login Failed: Invalid credentials", Toast.LENGTH_SHORT).show();
-                }
+                                // Start SearchActivity on successful login
+                                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                                startActivity(intent);
+                                finish();  // Optional: Close MainActivity so user can't go back to login screen
+                            } else {
+                                // Login failed
+                                Toast.makeText(MainActivity.this, "Login Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
     }

@@ -5,5 +5,6 @@
     <color name="primaryColor">#FF6200EE</color>
     <color name="primaryTextColor">#333333</color>
     <color name="secondaryTextColor">#666666</color>
-    <color name="cardcolor">#FF0000</color>
+    <color name="cardcolor">#FFFFFF</color>
+    <color name="button">#0080FF</color>
 </resources>

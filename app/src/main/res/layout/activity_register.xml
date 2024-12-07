@@ -102,7 +102,6 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="Register"
                     android:textColor="#FFFFFF" />
-
                 <!-- Register Link -->
                 <TextView
                     android:id="@+id/register_link"

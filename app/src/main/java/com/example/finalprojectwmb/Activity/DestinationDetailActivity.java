@@ -1,16 +1,19 @@
 package com.example.finalprojectwmb.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
+import androidx.fragment.app.Fragment;
 
 import com.example.finalprojectwmb.Adapter.PackageAdapter;
 import com.example.finalprojectwmb.R;
 import com.example.finalprojectwmb.TravelPackage;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DestinationDetailActivity extends AppCompatActivity {
 
@@ -23,9 +26,11 @@ public class DestinationDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination_detail);
 
+        // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize package list
         packageList = new ArrayList<>();
 
         // Get the destination ID from the intent
@@ -34,8 +39,45 @@ public class DestinationDetailActivity extends AppCompatActivity {
         // Load packages based on the destination ID
         loadPackages(destinationId);
 
-        packageAdapter = new PackageAdapter(packageList);
+        // Set up the adapter with context and package list
+        packageAdapter = new PackageAdapter(this, packageList);
         recyclerView.setAdapter(packageAdapter);
+
+        // Set up BottomNavigationView
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = getSelectedFragment(item.getItemId());
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment) // Replace with your container ID
+                        .addToBackStack(null) // Optional: add to back stack
+                        .commit();
+                return true; // Return true to indicate the item was selected
+            }
+
+            return false; // Return false if no action was taken
+        });
+    }
+
+    private Fragment getSelectedFragment(int itemId) {
+        if (itemId == R.id.home) {
+            return new SearchFragment();
+        } else if (itemId == R.id.history) {
+            return new HistoryFragment(); // Replace with your HistoryFragment
+        } else if (itemId == R.id.settings) {
+            return new SettingFragment(); // Replace with your SettingFragment
+        } else if (itemId == R.id.profile) {
+            return new ProfileFragment(); // Replace with your ProfileFragment
+        } else {
+            return null; // Return null if no match is found
+        }
     }
 
     private void loadPackages(String destinationId) {
