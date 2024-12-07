@@ -48,4 +48,5 @@ public class SearchActivity extends AppCompatActivity {
             return true; // Return true to indicate the item was selected
         });
     }
+
 }
