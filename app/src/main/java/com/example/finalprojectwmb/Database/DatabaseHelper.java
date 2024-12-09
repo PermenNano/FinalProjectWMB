@@ -42,8 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         try {
             long result = db.insert(TABLE_NAME, null, contentValues);
-            Log.d("DatabaseHelper", "Insert result: " + result); // Log the result
-            return result != -1; // Returns true if insert was successful
+            Log.d("DatabaseHelper", "Insert result: " + result);
+            return result != -1;
         } catch (Exception e) {
             Log.e("DatabaseHelper", "Insert failed: " + e.getMessage());
             return false;
@@ -53,8 +53,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null, COL_EMAIL + "=? AND " + COL_PASSWORD + "=?", new String[]{email, password}, null, null, null);
-        boolean exists = cursor.getCount() > 0; // Returns true if user exists
-        cursor.close(); // Close the cursor to avoid memory leaks
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
         return exists;
     }
 

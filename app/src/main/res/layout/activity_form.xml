@@ -25,7 +25,7 @@
             android:inputType="textPersonName"
             android:padding="10dp"
             android:background="@drawable/rounded_edittext"
-            android:layout_marginBottom="16dp" /> <!-- Added margin -->
+            android:layout_marginBottom="16dp" />
 
         <EditText
             android:id="@+id/emailEditText"
@@ -35,7 +35,7 @@
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:background="@drawable/rounded_edittext"
-            android:layout_marginBottom="16dp" /> <!-- Added margin -->
+            android:layout_marginBottom="16dp" />
 
         <EditText
             android:id="@+id/phoneEditText"
@@ -45,7 +45,7 @@
             android:inputType="phone"
             android:padding="10dp"
             android:background="@drawable/rounded_edittext"
-            android:layout_marginBottom="16dp" /> <!-- Added margin -->
+            android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/submitButton"

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.finalprojectwmb.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private Button login;
@@ -34,15 +33,12 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         TextView registerLink = findViewById(R.id.register);
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
-        // Load saved email if it exists
         String savedEmail = sharedPreferences.getString("email", "");
         userName.setText(savedEmail);
 
-        // Register link listener
         registerLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Login button listener
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,24 +62,19 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Sign in with Firebase Auth
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(MainActivity.this, task -> {
                             if (task.isSuccessful()) {
-                                // Login successful
                                 Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                                // Save email to SharedPreferences
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("email", email);
                                 editor.apply();
 
-                                // Start SearchActivity on successful login
                                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                                 startActivity(intent);
-                                finish();  // Optional: Close MainActivity so user can't go back to login screen
+                                finish();
                             } else {
-                                // Login failed
                                 Toast.makeText(MainActivity.this, "Login Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -92,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Helper method to validate email format
     private boolean isValidEmail(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }

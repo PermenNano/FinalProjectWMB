@@ -17,11 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Fragment container -->
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize" /> <!-- Adjust margin if needed -->
+        android:layout_marginBottom="?attr/actionBarSize" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

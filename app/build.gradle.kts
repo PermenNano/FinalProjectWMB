@@ -41,10 +41,10 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.picasso)
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1")) // Use BOM for Firebase
-    implementation("com.google.firebase:firebase-auth") // No need to specify version, BOM handles it
-    implementation("com.google.firebase:firebase-firestore") // No need to specify version, BOM handles it
-    implementation("com.google.firebase:firebase-storage") // No need to specify version, BOM handles it
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation("androidx.recyclerview:recyclerview:1.2.1")
@@ -52,7 +52,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("org.osmdroid:osmdroid-android:6.1.10")
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-    // Add Google Play Services Location
-    implementation("com.google.android.gms:play-services-location:21.0.1") // Check for the latest version
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

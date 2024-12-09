@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.finalprojectwmb.Destination;
-
 import com.example.finalprojectwmb.R;
 
 import java.util.List;
@@ -30,15 +29,13 @@ public class DestinationAdapter extends ArrayAdapter<Destination> {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_destination, parent, false);
         }
 
-        // Bind data to views
         Destination destination = destinations.get(position);
 
         TextView nameTextView = convertView.findViewById(R.id.card_title);
         ImageView imageView = convertView.findViewById(R.id.card_image);
 
-        // Set text and drawable resource
         nameTextView.setText(destination.getName());
-        imageView.setImageResource(destination.getImageResource()); // Load image from drawable
+        imageView.setImageResource(destination.getImageResource());
 
         return convertView;
     }

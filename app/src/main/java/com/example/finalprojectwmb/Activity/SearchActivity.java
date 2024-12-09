@@ -13,16 +13,14 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search); // Ensure this is the correct layout
+        setContentView(R.layout.activity_search);
 
-        // Set up BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
-        // Set the default fragment to SearchFragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new SearchFragment()) // Replace with your container ID
+                    .replace(R.id.fragment_container, new SearchFragment())
                     .commit();
         }
 
@@ -32,21 +30,20 @@ public class SearchActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.home) {
                 selectedFragment = new SearchFragment();
             } else if (item.getItemId() == R.id.history) {
-                selectedFragment = new HistoryFragment(); // Replace with your HistoryFragment
+                selectedFragment = new HistoryFragment();
             } else if (item.getItemId() == R.id.settings) {
-                selectedFragment = new SettingFragment(); // Replace with your SettingFragment
+                selectedFragment = new SettingFragment();
             } else if (item.getItemId() == R.id.profile) {
-                selectedFragment = new ProfileFragment(); // Replace with your ProfileFragment
+                selectedFragment = new ProfileFragment();
             }
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment) // Replace with your container ID
-                        .addToBackStack(null) // Optional: add to back stack
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .addToBackStack(null)
                         .commit();
             }
-            return true; // Return true to indicate the item was selected
+            return true;
         });
     }
-
 }

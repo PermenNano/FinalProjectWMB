@@ -49,11 +49,9 @@ public class SearchFragment extends Fragment {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        // Initialize destination list and adapter
         destinationList = new ArrayList<>();
         cardAdapter = new CardAdapter(getContext(), destinationList, this::onDestinationClick);
 
-        // Set up RecyclerView for horizontal scrolling
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
