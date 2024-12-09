@@ -30,20 +30,15 @@ public class HistoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        // Initialize Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize application list
         applicationList = new ArrayList<>();
 
-        // Load applications from Firestore
         loadApplications();
 
         return view;

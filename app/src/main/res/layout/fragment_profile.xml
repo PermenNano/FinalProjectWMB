@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Header with Logo and Search Bar inside a Rounded Container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -25,7 +24,6 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <!-- Logo Text -->
                 <TextView
                     android:id="@+id/logoText"
                     android:layout_width="wrap_content"
@@ -35,7 +33,6 @@
                     android:textSize="17sp"
                     android:fontFamily="sans-serif-medium" />
 
-                <!-- Search Bar (EditText) -->
                 <EditText
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
@@ -50,7 +47,6 @@
                     android:textColorHint="#999999" />
             </LinearLayout>
 
-            <!-- Profile Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,6 +60,8 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_profile_foreground"
                     android:contentDescription="@string/profile_image"
+                    android:background="@drawable/circular_profile"
+                    android:scaleType="centerCrop"
                     android:layout_marginBottom="8dp" />
 
                 <Button
@@ -75,7 +73,6 @@
                     android:backgroundTint="#0080FF"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Editable User Information -->
                 <TextView
                     android:id="@+id/usernameLabel"
                     android:layout_width="wrap_content"
@@ -126,21 +123,33 @@
                     android:textColor="#000000"
                     android:inputType="textPassword" />
 
-                <!-- Save Button -->
-                <Button
-                    android:id="@+id/saveButton"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:layout_gravity="center"
-                    android:backgroundTint="#0080FF"
-                    android:layout_marginTop="16dp" />
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/saveButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        android:backgroundTint="#0080FF"
+                        android:layout_marginEnd="16dp" />
+
+                    <Button
+                        android:id="@+id/logoutButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Logout"
+                        android:backgroundTint="#0080FF" />
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

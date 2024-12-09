@@ -12,15 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalprojectwmb.R;
 import com.example.finalprojectwmb.TravelPackage;
-import com.example.finalprojectwmb.Activity.FormActivity; // Import your FormActivity
+import com.example.finalprojectwmb.Activity.FormActivity;
 import java.util.List;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageViewHolder> {
     private List<TravelPackage> packageList;
-    private Context context; // Add context
+    private Context context;
 
     public PackageAdapter(Context context, List<TravelPackage> packageList) {
-        this.context = context; // Initialize context
+        this.context = context;
         this.packageList = packageList;
     }
 
@@ -39,7 +39,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
         holder.descriptionTextView.setText(travelPackage.getDetails());
         holder.imageView.setImageResource(travelPackage.getImageResource());
 
-        // Set up the apply button click listener
         holder.applyButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, FormActivity.class);
             context.startActivity(intent);
@@ -56,7 +55,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
         TextView priceTextView;
         TextView descriptionTextView;
         ImageView imageView;
-        Button applyButton; // Add apply button
+        Button applyButton;
 
         public PackageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,7 +63,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.PackageV
             priceTextView = itemView.findViewById(R.id.packagePrice);
             descriptionTextView = itemView.findViewById(R.id.packageDetails);
             imageView = itemView.findViewById(R.id.packageImage);
-            applyButton = itemView.findViewById(R.id.applyButton); // Initialize apply button
+            applyButton = itemView.findViewById(R.id.applyButton);
         }
     }
 }

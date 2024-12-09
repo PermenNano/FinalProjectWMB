@@ -4,21 +4,18 @@ public class TravelApplication {
     private String name;
     private String email;
     private String phone;
-    private String userId; // Add this field
+    private String userId;
 
-    // Default constructor (required for Firestore)
     public TravelApplication() {
     }
 
-    // Constructor with parameters
     public TravelApplication(String name, String email, String phone, String userId) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.userId = userId; // Initialize userId
+        this.userId = userId;
     }
 
-    // Getters and setters
     public String getName() {
         return name;
     }
@@ -34,5 +31,4 @@ public class TravelApplication {
     public String getUserId() {
         return userId;
     }
-
 }

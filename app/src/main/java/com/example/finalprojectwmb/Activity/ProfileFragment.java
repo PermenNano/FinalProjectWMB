@@ -44,37 +44,27 @@ import java.util.Map;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
-    private static final int PICK_IMAGE = 1; // Request code for picking an image
-    private static final int CAPTURE_IMAGE = 2; // Request code for capturing an image
-    private static final int REQUEST_CAMERA_PERMISSION = 3; // Request code for camera permission
+    private static final int PICK_IMAGE = 1;
+    private static final int CAPTURE_IMAGE = 2;
+    private static final int REQUEST_CAMERA_PERMISSION = 3;
 
-    private EditText usernameDisplay, emailDisplay; // EditTexts for user data
-    private ImageView profileImage; // ImageView to display the profile image
-    private Button changeProfilePicture, saveButton; // Buttons for changing and saving
-    private Uri imageUri; // URI for the captured image
+    private EditText usernameDisplay, emailDisplay;
+    private ImageView profileImage;
+    private Button changeProfilePicture, saveButton, logoutButton;
+    private Uri imageUri;
 
-    private FirebaseFirestore db; // Firestore instance
-    private FirebaseAuth mAuth; // Firebase Auth instance
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        // Initialize views
         initializeViews(view);
-
-        // Initialize Firestore and Firebase Auth
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
-        // Load user data from Firestore
         loadUserData();
-
-        // Set up button listeners
         setButtonListeners();
-
         return view;
     }
 
@@ -84,30 +74,29 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         changeProfilePicture = view.findViewById(R.id.changeProfilePicture);
         saveButton = view.findViewById(R.id.saveButton);
+        logoutButton = view.findViewById(R.id.logoutButton);
     }
 
     private void setButtonListeners() {
         changeProfilePicture.setOnClickListener(v -> showImageOptions());
         saveButton.setOnClickListener(v -> saveProfileData());
+        logoutButton.setOnClickListener(v -> logoutUser());
     }
 
     private void loadUserData() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            String userId = user.getUid(); // Get the current user's ID
-            String email = user.getEmail(); // Get the email from Firebase Authentication
+            String userId = user.getUid();
+            String email = user.getEmail();
             DocumentReference docRef = db.collection("users").document(userId);
             docRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult() != null && task.getResult().exists()) {
                         String username = task.getResult().getString("username");
                         String profileImageBase64 = task.getResult().getString("profileImage");
-
-                        // Set the data to the EditTexts
                         usernameDisplay.setText(username);
-                        emailDisplay.setText(email); // Set the email from Firebase Auth
+                        emailDisplay.setText(email);
                         if (profileImageBase64 != null) {
-                            // Decode Base64 string to Bitmap and set it to ImageView
                             byte[] decodedString = Base64.decode(profileImageBase64, Base64.DEFAULT);
                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                             profileImage.setImageBitmap(decodedByte);
@@ -131,14 +120,12 @@ public class ProfileFragment extends Fragment {
                 .setTitle("Choose Profile Picture")
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
-                        // Check for camera permission
                         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                         } else {
                             openCamera();
                         }
                     } else {
-                        // Open gallery
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, PICK_IMAGE);
                     }
@@ -175,10 +162,10 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            profileImage.setImageURI(selectedImageUri); // Set the selected image to the ImageView
-            imageUri = selectedImageUri; // Store the URI for later use
+            profileImage.setImageURI(selectedImageUri);
+            imageUri = selectedImageUri;
         } else if (requestCode == CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            profileImage.setImageURI(imageUri); // Set the captured image to the ImageView
+            profileImage.setImageURI(imageUri);
         } else {
             Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
         }
@@ -190,12 +177,11 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            String userId = user.getUid(); // Get the current user's ID
+            String userId = user.getUid();
             Map<String, Object> userData = new HashMap<>();
             userData.put("username", username);
             userData.put("email", email);
 
-            // Convert image to Base64 and store it
             if (imageUri != null) {
                 try {
                     byte[] imageData = getImageData(imageUri);
@@ -206,7 +192,6 @@ public class ProfileFragment extends Fragment {
                 }
             }
 
-            // Save to Firestore
             db.collection("users").document(userId)
                     .set(userData, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Profile saved", Toast.LENGTH_SHORT).show())
@@ -219,18 +204,15 @@ public class ProfileFragment extends Fragment {
     private byte[] getImageData(Uri imageUri) throws IOException {
         InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-        // Compress the bitmap to reduce its size
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        int quality = 100; // Start with the highest quality
+        int quality = 100;
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
 
-        // Check the size and reduce quality if necessary
-        while (byteArrayOutputStream.toByteArray().length > 1024 * 1024) { // 1 MB
-            byteArrayOutputStream.reset(); // Clear the output stream
-            quality -= 10; // Reduce quality by 10 for more aggressive compression
+        while (byteArrayOutputStream.toByteArray().length > 1024 * 1024) {
+            byteArrayOutputStream.reset();
+            quality -= 10;
             if (quality < 0) {
-                break; // Prevent quality from going below 0
+                break;
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
         }
@@ -238,12 +220,20 @@ public class ProfileFragment extends Fragment {
         return byteArrayOutputStream.toByteArray();
     }
 
+    private void logoutUser() {
+        mAuth.signOut();
+        Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera(); // Permission granted, open camera
+                openCamera();
             } else {
                 Toast.makeText(getContext(), "Camera permission is required to take pictures", Toast.LENGTH_SHORT).show();
             }

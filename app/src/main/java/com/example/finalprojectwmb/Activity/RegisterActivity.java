@@ -35,11 +35,9 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         register = findViewById(R.id.register);
 
-        // Initialize Firebase Auth and Firestore
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Register button listener
         register.setOnClickListener(v -> registerUser());
     }
 
@@ -48,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passWord.getText().toString().trim();
         String username = userName.getText().toString().trim();
 
-        // Check for empty fields
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
             Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
             return;
@@ -63,28 +60,25 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Create user with Firebase Auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterActivity.this, task -> {
                     if (task.isSuccessful()) {
-                        // Registration successful
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             createUserDocument(user, username);
                         }
                     } else {
-                        // Registration failed
                         Toast.makeText(RegisterActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void createUserDocument(FirebaseUser user, String username) {
-        String userId = user.getUid(); // Get the user's UID
+        String userId = user.getUid();
         Map<String, Object> userData = new HashMap<>();
-        userData.put("email", user.getEmail()); // Set the user's email
-        userData.put("username", username); // Set the username provided during registration
-        userData.put("profileImage", ""); // Initialize with an empty string or a default image URL
+        userData.put("email", user.getEmail());
+        userData.put("username", username);
+        userData.put("profileImage", "");
 
         db.collection("users").document(userId)
                 .set(userData)
@@ -99,7 +93,6 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    // Helper method to validate email format
     private boolean isValidEmail(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
